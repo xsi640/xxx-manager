@@ -1,28 +1,19 @@
 import { InjectionKey } from 'vue';
-import { createStore, useStore as baseUseStore, Store } from 'vuex';
-import mutations from './mutations'
-import getters from './getters'
-import actions from './actions'
-import { useRoute } from 'vue-router';
+import { createStore, createLogger } from 'vuex';
+import root from './root'
 
 // 创建唯一类型key
-export const key: InjectionKey<Store<State>> = Symbol();
+const debug = process.env.NODE_ENV !== 'production'
 
 export interface State {
     token: string,
     user: StoreState.User
 }
 
-export const store = createStore<State>({
-    state: {   
-        token: '',
-        user: null
+export const store = createStore({
+    modules: {
+        [root.name]: root.module
     },
-    getters,
-    mutations,
-    actions
+    strict: debug,
+    plugins: debug ? [createLogger()] : []// debug add logger module
 })
-
-export function useStore() {
-    return baseUseStore(key)
-}

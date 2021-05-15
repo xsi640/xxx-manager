@@ -1,5 +1,5 @@
 import { useStore } from 'vuex'
-import { State } from '../store'
+import { State } from '..'
 
 const getters = {
     user: (state: State) => state.user,

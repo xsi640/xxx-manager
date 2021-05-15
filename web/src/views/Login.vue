@@ -46,7 +46,7 @@ import {
 import { defineComponent, reactive, ref, UnwrapRef, toRaw } from "vue";
 import router from "../router";
 import { store } from "../store";
-import * as action from "../store/actions-types";
+import * as action from "../store/root/actions";
 
 interface FormState {
     username: string;
@@ -67,7 +67,7 @@ export default defineComponent({
             formRef.value
                 .validate()
                 .then(() => {
-                    store.dispatch(action.LOGIN, toRaw(formState))
+                    store.dispatch("root/" + action.LOGIN, toRaw(formState));
                 })
                 .catch((error: ValidateErrorEntity<FormState>) => {
                     console.log("error", error);
