@@ -2,10 +2,9 @@ package com.github.xsi640.auth.controller
 
 import com.github.xsi640.auth.UnauthorizedException
 import com.github.xsi640.auth.User
-import com.github.xsi640.auth.UserRepository
 import com.github.xsi640.auth.UserService
-import com.github.xsi640.core.BaseService
 import com.github.xsi640.core.NotFoundException
+import org.hibernate.validator.constraints.Length
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
@@ -30,10 +29,22 @@ class AuthController {
         return user
     }
 
+    fun changePassword(@Valid @RequestBody request: ChangePasswordRequest): User {
+        TODO()
+    }
+
     data class LoginRequest(
         @field:NotBlank(message = "username is required.")
         var username: String = "",
         @field:NotBlank(message = "password is required.")
         var password: String = ""
+    )
+
+    data class ChangePasswordRequest(
+        @field:NotBlank(message = "old password is required.")
+        var oldPassword: String = "",
+        @field:NotBlank(message = "new password is required.")
+        @field:Length(min = 6, max = 32, message = "password length 6~32 bit")
+        var newPassword: String = ""
     )
 }
