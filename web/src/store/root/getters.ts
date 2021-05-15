@@ -1,9 +1,9 @@
 import { useStore } from 'vuex'
-import { State } from '..'
+import { store } from '..'
 
 const getters = {
-    user: (state: State) => state.user,
-    token: (state: State) => state.token
+    user: (state: StoreState.RootState) => state.user,
+    token: (state: StoreState.RootState) => state.token
 }
 
 export default getters

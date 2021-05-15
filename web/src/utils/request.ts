@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios from 'axios'
 import { message } from 'ant-design-vue'
 import { store } from '../store'
 
@@ -9,6 +9,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
     (config) => {
+        console.log(store)
         if (store.getters.token) {
             config.headers['X-Access-Token'] = store.getters.token
         }

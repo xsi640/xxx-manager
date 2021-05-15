@@ -44,7 +44,6 @@ import {
     ValidateErrorEntity,
 } from "ant-design-vue/es/form/interface";
 import { defineComponent, reactive, ref, UnwrapRef, toRaw } from "vue";
-import router from "../router";
 import { store } from "../store";
 import * as action from "../store/root/actions";
 
