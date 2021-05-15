@@ -1,5 +1,6 @@
 declare namespace StoreState {
     interface User {
-        name: string,
+        username: string,
+        displayName: string
     }
 }

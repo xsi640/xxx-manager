@@ -146,8 +146,8 @@ class GlobalControllerAdvice : ResponseBodyAdvice<Any> {
         request: ServerHttpRequest,
         response: ServerHttpResponse
     ): Any? {
-        val url = request.uri.toString()
-        if (!url.startsWith(API_URL)) {
+        val url = request.uri
+        if (!url.path.startsWith(API_URL)) {
             return body
         }
         if (body is Response<*>) {

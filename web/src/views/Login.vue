@@ -26,7 +26,9 @@
                     />
                 </a-form-item>
                 <a-form-item class="login-btn">
-                    <a-button type="primary" html-type="submit">登录</a-button>
+                    <a-button type="primary" html-type="submit" @click="login"
+                        >登录</a-button
+                    >
                     <a-button style="margin-left: 10px" @click="resetForm"
                         >重置</a-button
                     >
@@ -37,8 +39,14 @@
 </template>
 
 <script lang="ts">
-import { RuleObject } from "ant-design-vue/es/form/interface";
-import { defineComponent, reactive, ref, UnwrapRef } from "vue";
+import {
+    RuleObject,
+    ValidateErrorEntity,
+} from "ant-design-vue/es/form/interface";
+import { defineComponent, reactive, ref, UnwrapRef, toRaw } from "vue";
+import router from "../router";
+import { store } from "../store";
+import * as action from "../store/actions-types";
 
 interface FormState {
     username: string;
@@ -54,6 +62,16 @@ export default defineComponent({
         });
         const resetForm = () => {
             formRef.value.resetFields();
+        };
+        const login = () => {
+            formRef.value
+                .validate()
+                .then(() => {
+                    store.dispatch(action.LOGIN, toRaw(formState))
+                })
+                .catch((error: ValidateErrorEntity<FormState>) => {
+                    console.log("error", error);
+                });
         };
         let validateUsername = async (rule: RuleObject, value: string) => {
             if (value == "") {
@@ -77,6 +95,7 @@ export default defineComponent({
             formState,
             formRef,
             resetForm,
+            login,
             rules,
         };
     },
