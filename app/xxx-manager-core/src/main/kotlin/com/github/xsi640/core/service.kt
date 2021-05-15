@@ -32,9 +32,14 @@ abstract class BaseService<M : Any, ID> : Service<M, ID> {
 
     override fun page(page: Int, size: Int, order: OrderMode, vararg sort: String): Page<M> {
         val pageRequest = if (sort.isEmpty()) {
-            PageRequest.of(page, size)
+            PageRequest.of(page - 1, size)
         } else {
-            PageRequest.of(page, size, if (order == OrderMode.DESC) Sort.Direction.DESC else Sort.Direction.ASC)
+            PageRequest.of(
+                page - 1,
+                size,
+                if (order == OrderMode.DESC) Sort.Direction.DESC else Sort.Direction.ASC,
+                *sort
+            )
         }
         return repository.findAll(pageRequest)
     }

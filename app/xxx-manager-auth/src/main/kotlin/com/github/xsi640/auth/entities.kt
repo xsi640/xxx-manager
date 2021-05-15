@@ -1,6 +1,7 @@
 package com.github.xsi640.auth
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.github.xsi640.core.AuditableEntity
 import com.github.xsi640.core.BaseRepository
 import com.github.xsi640.core.BaseService
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +21,7 @@ data class User(
     var password: String,
     @Column(nullable = false, length = 255)
     var displayName: String
-)
+) : AuditableEntity()
 
 @Repository
 interface UserRepository : BaseRepository<User, Long> {

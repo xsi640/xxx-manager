@@ -23,7 +23,6 @@ abstract class AuditableEntity(
     @Column(name = "last_mod_date", nullable = true)
     var lastModDate: Date? = null,
     @LastModifiedBy
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_modifier", nullable = true)
     var lastModifier: String = ""
 )
