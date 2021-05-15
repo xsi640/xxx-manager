@@ -3,6 +3,8 @@ package com.github.xsi640.auth.controller
 import com.github.xsi640.auth.UnauthorizedException
 import com.github.xsi640.auth.User
 import com.github.xsi640.auth.UserRepository
+import com.github.xsi640.auth.UserService
+import com.github.xsi640.core.BaseService
 import com.github.xsi640.core.NotFoundException
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,11 +19,11 @@ import javax.validation.constraints.NotBlank
 @RequestMapping("/api/v1/auth")
 class AuthController {
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var userService: UserService
 
     @PostMapping("login")
     fun login(@Valid @RequestBody request: LoginRequest): User {
-        val user = userRepository.findByUsername(request.username) ?: throw NotFoundException("user not exists.")
+        val user = userService.findByUsername(request.username) ?: throw NotFoundException("user not exists.")
         if (!BCrypt.checkpw(request.password, user.password)) {
             throw UnauthorizedException("password error.")
         }

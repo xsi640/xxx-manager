@@ -2,7 +2,10 @@ package com.github.xsi640.auth
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.github.xsi640.core.BaseRepository
+import com.github.xsi640.core.BaseService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import org.springframework.stereotype.Service
 import javax.persistence.*
 
 @Entity
@@ -22,4 +25,15 @@ data class User(
 @Repository
 interface UserRepository : BaseRepository<User, Long> {
     fun findByUsername(username: String): User?
+}
+
+@Service
+class UserService : BaseService<User, Long>() {
+
+    @Autowired
+    private lateinit var userRepository: UserRepository
+
+    fun findByUsername(username: String): User? {
+        return userRepository.findByUsername(username)
+    }
 }
