@@ -6,6 +6,11 @@ open class ResponseException(
 ) : Exception()
 
 open class NotFoundException(
-    override val status: ResponseStatus = ResponseStatus.NOT_FOUND,
-    override val message: String = ""
+    override val message: String = "",
+    override val status: ResponseStatus = ResponseStatus.NOT_FOUND
+) : ResponseException(status, message)
+
+open class ParameterException(
+    override val message: String = "",
+    override val status: ResponseStatus = ResponseStatus.PARAMETER_ERROR
 ) : ResponseException(status, message)

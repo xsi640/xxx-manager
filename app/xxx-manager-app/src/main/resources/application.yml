@@ -1,0 +1,21 @@
+logging:
+  level:
+    org.springframework: INFO
+    com.github: DEBUG
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/xxx-manager.db
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  h2:
+    console:
+      enabled: true

@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 import kotlin.collections.*
 
 plugins {
@@ -12,7 +13,7 @@ plugins {
 allprojects {
 
     apply {
-        plugin("java")
+        plugin("idea")
         plugin("org.springframework.boot")
         plugin("io.spring.dependency-management")
         plugin("kotlin")
@@ -35,6 +36,7 @@ allprojects {
             credentials {
                 username = user
                 password = pwd
+                isAllowInsecureProtocol = true
             }
             url = uri("http://nexus.suyang.home/repository/maven-group/")
         }
@@ -48,15 +50,10 @@ allprojects {
 
     dependencies {
         implementation("commons-io:commons-io:${vers["commons_io"]}")
-        implementation("org.springframework.boot:spring-boot-starter-web")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
         implementation("org.jetbrains.kotlin:kotlin-allopen")
-
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
 
     tasks.withType<Test> {
@@ -69,4 +66,9 @@ allprojects {
             jvmTarget = "1.8"
         }
     }
+
+    val jar: Jar by tasks
+    jar.enabled = true
+    val bootJar: BootJar by tasks
+    bootJar.enabled = false
 }
