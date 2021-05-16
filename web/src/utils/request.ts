@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { message } from 'ant-design-vue'
-import { store } from '../store'
+import store from '../store'
 
 const service = axios.create({
     baseURL: '/api/v1/',
@@ -9,11 +9,9 @@ const service = axios.create({
 
 service.interceptors.request.use(
     (config) => {
-        console.log(store)
-        if (store.getters.token) {
-            config.headers['X-Access-Token'] = store.getters.token
+        if ((store.getters as any)['root/TOKEN']) {
+            config.headers['X-Access-Token'] = (store.getters as any)['root/TOKEN']
         }
-        console.log(config)
         return config
     },
     (error) => {
@@ -23,7 +21,6 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
     (response) => {
-        console.log('response', response)
         const res = response.data
         const status = res.status
         if (status != 0 && status != 200) {
@@ -33,7 +30,6 @@ service.interceptors.response.use(
         return res
     },
     (error) => {
-        message.error(error.message);
         return Promise.reject(error)
     }
 )

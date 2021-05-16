@@ -1,13 +1,10 @@
 import { createStore, createLogger } from 'vuex';
-import { RootModule } from './modules/root'
+import createPersistedState from 'vuex-persistedstate'
 
 // 创建唯一类型key
 const debug = process.env.NODE_ENV !== 'production'
 
-export const store = createStore({
-    // modules: [
-    //     RootModule
-    // ],
+export default createStore({
     strict: debug,
-    plugins: debug ? [createLogger()] : [],// debug add logger module
+    plugins: debug ? [createLogger(), createPersistedState({storage:window.sessionStorage})] : [],// debug add logger module
 })

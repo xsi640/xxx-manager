@@ -49,12 +49,11 @@
 import {
     RuleObject,
     ValidateErrorEntity,
-} from 'ant-design-vue/es/form/interface';
+} from "ant-design-vue/es/form/interface";
 import { defineComponent, reactive, ref, UnwrapRef, toRaw } from "vue";
 import { mapState } from "vuex";
 import { RootModule } from "../store/modules/root";
-import { store } from "../store";
-import * as action from "../store/root/actions";
+import store from "../store";
 
 interface FormState {
     username: string;
@@ -72,7 +71,6 @@ export default defineComponent({
             formRef.value.resetFields();
         };
         const login = () => {
-            console.log(store);
             formRef.value
                 .validate()
                 .then(() => {

@@ -1,27 +1,35 @@
 import { defineAsyncComponent } from 'vue'
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { store } from '../store';
+import store from '../store';
 
 const login = defineAsyncComponent(() => import('../views/login.vue'))
 const main = defineAsyncComponent(() => import('../views/main.vue'))
 
-const routes: Array<RouteRecordRaw> = [
+
+const routes = [
   {
     path: '/',
-    name: 'main',
-    component: main
+    redirect: '/main'
   },
   {
     path: '/login',
     name: 'login',
     component: login
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'main',
+    component: main
+  }, {
+    path: '/404',
+    component: defineAsyncComponent(() => import('../views/404.vue'))
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 })
 
@@ -30,14 +38,13 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next()
   } else {
-    console.log((store.getters)['root/token'])
-    if ((store.getters)['root/token']) {
+    if ((store.getters as any)['root/TOKEN']) {
       next()
     } else {
       next('/login')
     }
+    NProgress.done()
   }
-  NProgress.done()
 })
 
 router.afterEach(() => {

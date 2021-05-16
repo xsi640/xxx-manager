@@ -1,9 +1,9 @@
 declare namespace StoreState {
 
     interface RootState {
-        token: string | null,
         loading: boolean,
         user: User | null
+        token: string
     }
 
     interface User {
