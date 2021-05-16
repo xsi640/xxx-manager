@@ -1,16 +1,15 @@
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators'
-import * as auth from '../../api/auth'
-import router from '../../router'
-import store from '../../store'
+import * as auth from '/@/api/auth'
+import router from '/@/router'
+import store from '/@/store'
 
 @Module({ namespaced: true, name: 'root', dynamic: true, store })
 class Root extends VuexModule implements StoreState.RootState {
-    public user = null;
+    public user: StoreState.User | null = null;
     public loading = false;
     public token = '';
 
     get TOKEN() {
-        console.log('aaaaa')
         return this.token;
     }
 

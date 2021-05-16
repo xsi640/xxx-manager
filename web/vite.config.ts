@@ -1,11 +1,22 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '',
   plugins: [vue()],
+  resolve: {
+    alias: {
+      '/@': resolve(__dirname, '.', 'src')
+    }
+  },
+  optimizeDeps: {
+    include: ['axios']
+  },
   server: {
-    open: '/',
+    cors: true,
+    open: true,
     proxy: {
       '/api': {
         target: 'http://localhost:9000',
@@ -13,7 +24,4 @@ export default defineConfig({
       }
     }
   },
-  optimizeDeps: {
-     exclude: []
-  }
 })

@@ -2,7 +2,7 @@ import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router';
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import store from '../store';
+import store from '/@/store';
 
 const login = defineAsyncComponent(() => import('../views/login.vue'))
 const main = defineAsyncComponent(() => import('../views/main.vue'))

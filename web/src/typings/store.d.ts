@@ -1,5 +1,4 @@
 declare namespace StoreState {
-
     interface RootState {
         loading: boolean,
         user: User | null

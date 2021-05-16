@@ -23,7 +23,6 @@ class AuthController {
 
     @PostMapping("login")
     fun login(@Valid @RequestBody request: LoginRequest): User {
-        sleep(2000)
         val user = userService.findByUsername(request.username) ?: throw NotFoundException("用户不存在")
         if (!BCrypt.checkpw(request.password, user.password)) {
             throw UnauthorizedException("用户名或密码错误")

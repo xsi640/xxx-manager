@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { message } from 'ant-design-vue'
-import store from '../store'
+import store from '/@/store'
 
 const service = axios.create({
     baseURL: '/api/v1/',
