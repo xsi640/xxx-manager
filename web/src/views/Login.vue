@@ -26,10 +26,14 @@
                     />
                 </a-form-item>
                 <a-form-item class="login-btn">
-                    <a-button type="primary" html-type="submit" @click="login"
+                    <a-button
+                        type="primary"
+                        html-type="submit"
+                        @click="login"
+                        v-model:loading="loading"
                         >登录</a-button
                     >
-                    <a-button style="margin-left: 10px" @click="resetForm"
+                    <a-button style="margin-left: 10px" @click="resetForm" v-model:disabled="loading"
                         >重置</a-button
                     >
                 </a-form-item>
@@ -44,6 +48,7 @@ import {
     ValidateErrorEntity,
 } from "ant-design-vue/es/form/interface";
 import { defineComponent, reactive, ref, UnwrapRef, toRaw } from "vue";
+import { mapState } from "vuex";
 import { store } from "../store";
 import * as action from "../store/root/actions";
 
@@ -97,6 +102,11 @@ export default defineComponent({
             login,
             rules,
         };
+    },
+    computed: {
+        ...mapState('root', {
+            loading: state => state.loading
+        })
     },
 });
 </script>
