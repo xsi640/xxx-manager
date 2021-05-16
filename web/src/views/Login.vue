@@ -33,7 +33,10 @@
                         v-model:loading="loading"
                         >登录</a-button
                     >
-                    <a-button style="margin-left: 10px" @click="resetForm" v-model:disabled="loading"
+                    <a-button
+                        style="margin-left: 10px"
+                        @click="resetForm"
+                        v-model:disabled="loading"
                         >重置</a-button
                     >
                 </a-form-item>
@@ -46,9 +49,10 @@
 import {
     RuleObject,
     ValidateErrorEntity,
-} from "ant-design-vue/es/form/interface";
+} from 'ant-design-vue/es/form/interface';
 import { defineComponent, reactive, ref, UnwrapRef, toRaw } from "vue";
 import { mapState } from "vuex";
+import { RootModule } from "../store/modules/root";
 import { store } from "../store";
 import * as action from "../store/root/actions";
 
@@ -68,10 +72,11 @@ export default defineComponent({
             formRef.value.resetFields();
         };
         const login = () => {
+            console.log(store);
             formRef.value
                 .validate()
                 .then(() => {
-                    store.dispatch("root/" + action.LOGIN, toRaw(formState));
+                    RootModule.login(toRaw(formState));
                 })
                 .catch((error: ValidateErrorEntity<FormState>) => {
                     console.log("error", error);
@@ -104,9 +109,9 @@ export default defineComponent({
         };
     },
     computed: {
-        ...mapState('root', {
-            loading: state => state.loading
-        })
+        ...mapState("root", {
+            loading: (state) => state.loading,
+        }),
     },
 });
 </script>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.lang.Thread.sleep
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 
@@ -22,6 +23,7 @@ class AuthController {
 
     @PostMapping("login")
     fun login(@Valid @RequestBody request: LoginRequest): User {
+        sleep(2000)
         val user = userService.findByUsername(request.username) ?: throw NotFoundException("用户不存在")
         if (!BCrypt.checkpw(request.password, user.password)) {
             throw UnauthorizedException("用户名或密码错误")
