@@ -8,6 +8,7 @@ plugins {
     kotlin("jvm") version "1.5.0"
     kotlin("plugin.spring") version "1.5.0"
     kotlin("plugin.jpa") version "1.5.0"
+    kotlin("kapt") version "1.5.0" apply false
 }
 
 allprojects {
@@ -38,15 +39,21 @@ allprojects {
                 password = pwd
                 isAllowInsecureProtocol = true
             }
-            url = uri("http://nexus.suyang.home/repository/maven-group/")
+            url = uri("http://172.16.11.231:8081/nexus/repository/maven2-group/")
+//            url = uri("http://nexus.suyang.home/repository/maven-group/")
         }
     }
 
     val vers = mapOf(
         "commons_io" to "2.6",
         "commons_codec" to "1.15",
-        "commons_lang" to "3.9"
+        "commons_lang" to "3.9",
+        "jbcrypt" to "0.4",
+        "caffeine" to "2.9.0",
+        "jjwt" to "0.11.2",
+        "queryDSL" to "4.4.0",
     )
+    rootProject.extra.set("vers", vers)
 
     dependencies {
         implementation("commons-io:commons-io:${vers["commons_io"]}")

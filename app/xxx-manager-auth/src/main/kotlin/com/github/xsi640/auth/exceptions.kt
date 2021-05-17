@@ -7,3 +7,5 @@ open class UnauthorizedException(
     override val message: String = "",
     override val status: ResponseStatus = ResponseStatus.UN_AUTHORIZED
 ) : ResponseException(status, message)
+
+open class TokenErrorException : ResponseException(ResponseStatus.UN_AUTHORIZED, "token error")

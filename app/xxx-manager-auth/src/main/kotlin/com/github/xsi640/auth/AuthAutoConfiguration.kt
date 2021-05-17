@@ -1,5 +1,7 @@
 package com.github.xsi640.auth
 
+import com.github.xsi640.auth.repository.User
+import com.github.xsi640.auth.repository.UserRepository
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner

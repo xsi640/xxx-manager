@@ -39,9 +39,9 @@ data class Response<T : Any?>(
 
 data class Paged<T : Any>(
     val total: Long,
-    val totalPages: Int,
-    val page: Int,
-    val size: Int,
+    val totalPages: Long,
+    val page: Long,
+    val size: Long,
     val items: List<T>
 ) {
     companion object {
@@ -49,22 +49,22 @@ data class Paged<T : Any>(
             return Response.of(
                 Paged(
                     total = p.totalElements,
-                    totalPages = p.totalPages,
-                    page = p.number + 1,
-                    size = p.size,
+                    totalPages = p.totalPages.toLong(),
+                    page = (p.number + 1).toLong(),
+                    size = p.size.toLong(),
                     items = p.content
                 )
             )
         }
 
-        fun <T : Any> of(items: List<T>, page: Int, size: Int, total: Long): Response<Paged<T>> {
+        fun <T : Any> of(items: List<T>, page: Long, size: Long, total: Long): Response<Paged<T>> {
             return Response.of(
                 Paged(
                     total = total,
                     totalPages = if (total % size == 0L) {
-                        (total / size).toInt()
+                        total / size
                     } else {
-                        (total / size + 1).toInt()
+                        total / size + 1
                     },
                     page = page,
                     size = size,

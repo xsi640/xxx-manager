@@ -1,17 +1,15 @@
 package com.github.xsi640.auth.controller
 
-import com.github.xsi640.auth.UnauthorizedException
-import com.github.xsi640.auth.User
-import com.github.xsi640.auth.UserService
+import com.github.xsi640.auth.*
+import com.github.xsi640.auth.repository.*
+import com.github.xsi640.core.BaseService
 import com.github.xsi640.core.NotFoundException
 import org.hibernate.validator.constraints.Length
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import java.lang.Thread.sleep
+import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 
@@ -19,19 +17,75 @@ import javax.validation.constraints.NotBlank
 @RequestMapping("/api/v1/auth")
 class AuthController {
     @Autowired
-    private lateinit var userService: UserService
+    private lateinit var userService: BaseService<User, Long>
+
+    @Autowired
+    private lateinit var refreshTokenService: BaseService<RefreshToken, String>
+
+    @Autowired
+    private lateinit var tokenStoreService: TokenStoreService
+
+    @Autowired
+    private lateinit var currentUserContext: CurrentUserContext
 
     @PostMapping("login")
-    fun login(@Valid @RequestBody request: LoginRequest): User {
-        val user = userService.findByUsername(request.username) ?: throw NotFoundException("用户不存在")
+    fun login(@Valid @RequestBody request: LoginRequest): JwtToken {
+        val user = userService.jpaQuery.where(QUser.user.username.eq(request.username)).fetchOne()
+            ?: throw NotFoundException("用户不存在")
         if (!BCrypt.checkpw(request.password, user.password)) {
             throw UnauthorizedException("用户名或密码错误")
         }
-        return user
+        return getJwtToken(user)
     }
 
-    fun changePassword(@Valid @RequestBody request: ChangePasswordRequest): User {
-        TODO()
+    @PostMapping("refresh/{token}")
+    fun refreshToken(@PathVariable("token") refreshToken: String): JwtToken {
+        val token = refreshTokenService.get(refreshToken) ?: throw UnauthorizedException("refresh_token无效")
+        if (Date().time < token.expired.time) {
+            val user = userService.get(token.userId) ?: throw UnauthorizedException("user not exists.")
+            return getJwtToken(user)
+        } else {
+            throw UnauthorizedException("refresh_token过期")
+        }
+    }
+
+    @GetMapping(
+        path = ["currentUser"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun getCurrentUser(): User {
+        return currentUserContext.currentUser()
+    }
+
+    @GetMapping("logout")
+    fun logout() {
+        tokenStoreService.delete(getCurrentUser().id.toString())
+    }
+
+    private fun getJwtToken(user: User): JwtToken {
+        val jwtUser = JwtUser(
+            userId = user.id.toString(),
+            username = user.username,
+        )
+        val token = jwtUser.createToken()
+        val refreshToken = generateRefreshToken()
+        refreshTokenService.jpaDelete.where(QRefreshToken.refreshToken1.userId.eq(user.id))
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.SECOND, REFRESH_TOKEN_EXPIRATION)
+        refreshTokenService.insert(
+            RefreshToken(
+                refreshToken = refreshToken,
+                userId = user.id,
+                expired = calendar.time
+            )
+        )
+        tokenStoreService.set(user.id.toString(), token)
+
+        return JwtToken(
+            accessToken = token,
+            refreshToken = refreshToken,
+            expires = TOKEN_EXPIRATION
+        )
     }
 
     data class LoginRequest(
